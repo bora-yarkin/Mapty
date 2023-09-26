@@ -2,17 +2,16 @@
 
 ///////////////////////////////TO DO///////////////////////////////
 
-// Ability to edit a workout;
-// Ability to delete a workout;
-// Ability to delete all workouts;
-// Ability to sort workouts by a certain field (e.g. distance);
-// Re-build Running and Cycling objects coming from Local Storage;
-// More realistic error and confirmation messages;
-// Ability to position the map to show all workouts [very hard];
-// Ability to draw lines and shapes instead of just points [very hard];
-// Geocode location from coordinates (“Run in Faro, Portugal”) [only after
-// asynchronous JavaScript section];
-// Display weather data for workout time and place [only after asynchronous JavaScript section].
+// 1. Ability to edit a workout
+// 2. Ability to delete a workout
+// 3. Ability to delete all workouts
+// 4. Ability to sort workouts by a certain field (e.g. distance)
+// 5. Re-build Running and Cycling objects coming from Local Storage
+// 6. More realistic error and confirmation messages
+// 7. Ability to position the map to show all workouts
+// 8. bility to draw lines and shapes instead of just points
+// 9. Geocode location from coordinates (“Run in Faro, Portugal”)
+// 10. Display weather data for workout time and place
 
 // Selecting DOM elements
 const form = document.querySelector(".form");
