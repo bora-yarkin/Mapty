@@ -1,9 +1,7 @@
 "use strict";
 
 ///////////////////////////////TO DO///////////////////////////////
-
-// 1. Ability to delete a workout
-// 2. Ability to delete all workouts COMPLETED
+// 1. Refactor the code
 // 3. Ability to edit a workout
 // 4. Ability to sort workouts by a certain field (e.g. distance)
 // 5. Re-build Running and Cycling objects coming from Local Storage
@@ -15,6 +13,7 @@
 
 // Selecting DOM elements
 const form = document.querySelector(".form");
+const formEdit = document.querySelector(".form--edit");
 const containerWorkouts = document.querySelector(".workouts");
 const inputType = document.querySelector(".form__input--type");
 const inputDistance = document.querySelector(".form__input--distance");
@@ -22,7 +21,6 @@ const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 const resetBtn = document.getElementById("reset__btn");
-//const deleteBtn = document.querySelector(".form__btn--delete");
 
 ///////////////////////////////WORKOUT CLASSES///////////////////////////////
 
@@ -110,6 +108,27 @@ class App {
     }
   }
 
+  // Get workouts from local storage
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem("workout"));
+    this._toggleResetHidden(data);
+    if (!data) return;
+    this.#workouts = data;
+    this.#workouts.forEach((work) => this._renderWorkout(work));
+  }
+
+  _setLocalStorage() {
+    localStorage.setItem("workout", JSON.stringify(this.#workouts));
+  }
+
+  _getRemoveButton() {
+    document.addEventListener("DOMContentLoaded", () => {
+      const deleteBtn = document.querySelector(".form__btn--delete");
+      if (!deleteBtn) return;
+      deleteBtn.addEventListener("click", this._removeWorkout.bind(this));
+    });
+  }
+
   // Load the map with the user's position
   _loadMap(position) {
     const { latitude, longitude } = position.coords;
@@ -145,12 +164,6 @@ class App {
     setTimeout(() => (form.style.display = "grid"), 1000);
   }
 
-  // Toggle the display of elevation and cadence fields based on workout type
-  _toggleElevationField() {
-    inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
-    inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
-  }
-
   // Create a new workout based on form data
   _newWorkout(e) {
     e.preventDefault();
@@ -162,6 +175,7 @@ class App {
     const type = inputType.value;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
+
     const { lat, lng } = this.#mapEvent.latlng;
 
     let workout;
@@ -199,42 +213,6 @@ class App {
     this._toggleResetHidden(workout);
   }
 
-  // Set local storage for workouts
-  _setLocalStorage() {
-    localStorage.setItem("workout", JSON.stringify(this.#workouts));
-    this._getRemoveButton();
-  }
-
-  // Get workouts from local storage
-  _getLocalStorage() {
-    const data = JSON.parse(localStorage.getItem("workout"));
-    this._toggleResetHidden(data);
-    if (!data) return;
-    this.#workouts = data;
-    this.#workouts.forEach((work) => this._renderWorkout(work));
-  }
-
-  _getRemoveButton() {
-    document.addEventListener("DOMContentLoaded", () => {
-      const deleteBtn = document.querySelector(".form__btn--delete");
-      if (!deleteBtn) return;
-      deleteBtn.addEventListener("click", this._removeWorkout.bind(this));
-    });
-  }
-
-  _removeWorkout(e) {
-    const deleteBtn = e.target.closest(".form__btn--delete");
-    if (!deleteBtn) return;
-
-    const workoutEl = e.target.closest(".workout");
-    if (!workoutEl) return;
-    const workout = this.#workouts.find((work) => work.id === workoutEl.dataset.id);
-    this.#workouts = this.#workouts.filter((work) => work.id !== workoutEl.dataset.id);
-    this._removeWorkoutMarker(workout);
-    workoutEl.remove();
-    this._setLocalStorage();
-  }
-
   _resetAll() {
     const workoutElements = document.querySelectorAll(".workout");
     workoutElements.forEach((workoutElement) => workoutElement.remove());
@@ -248,8 +226,31 @@ class App {
     this._hideForm();
     this._toggleResetHidden();
   }
+
+  _removeWorkout(e) {
+    const deleteBtn = e.target.closest(".form__btn--delete");
+    if (!deleteBtn) return;
+
+    const workoutEl = e.target.closest(".workout");
+    if (!workoutEl) return;
+    const workout = this.#workouts.find((work) => work.id === workoutEl.dataset.id);
+    this.#workouts = this.#workouts.filter((work) => work.id !== workoutEl.dataset.id);
+    this._removeWorkoutMarker(workout);
+    workoutEl.remove();
+    this._setLocalStorage();
+    this._toggleResetHidden(this.#workouts);
+  }
+
+  // Set local storage for workouts
+
   _toggleResetHidden(data) {
-    resetBtn.classList.toggle("hidden", !data);
+    resetBtn.classList.toggle("hidden", !data || data.length === 0);
+  }
+
+  // Toggle the display of elevation and cadence fields based on workout type
+  _toggleElevationField() {
+    inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
+    inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
   }
 
   //Add workout markers to the map
@@ -270,6 +271,7 @@ class App {
     this.#markers.addLayer(marker); // add the marker to the markers group
     this.#map.addLayer(this.#markers); // add the markers group to the map
   }
+
   //Remove marker from map
   _removeWorkoutMarker(workout) {
     const marker = this.#markers.getLayers().find((layer) => layer.getLatLng().equals(workout.coords));
@@ -326,6 +328,7 @@ class App {
     html += `
       
         <button class="form__btn form__btn--delete" data-id="${workout.id}">Delete Workout</button>
+        <button class="form__btn form__btn--edit" data-id="${workout.id}">Edit Workout</button>
       </li>`;
 
     form.insertAdjacentHTML("afterend", html);

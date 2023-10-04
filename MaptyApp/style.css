@@ -115,7 +115,8 @@ a:visited {
   font-weight: 800;
 }
 
-.form {
+.form,
+.form--edit {
   background-color: var(--color-dark--2);
   border-radius: 5px;
   padding: 1.5rem 2.75rem;
