@@ -1,0 +1,19 @@
+# Dependency folders
+node_modules/
+MaptyApp/node_modules/
+
+# Operating system files
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build / distribution output
+build/
+dist/
+
+# IDE metadata
+.vscode/
+.idea/
