@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 Bora Yarkın
+# SPDX-License-Identifier: GPL-3.0-only
+
+name: Feature request
+description: Suggest an idea or enhancement.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your idea.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: What do you want to see added or improved?
+      placeholder: Add a way to export workouts as CSV.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem does this solve?
+      placeholder: I want to analyze workouts in another app.
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should this work?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Any alternatives you've considered?

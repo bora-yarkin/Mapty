@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: 2026 Bora Yarkın
+# SPDX-License-Identifier: GPL-3.0-only
+
+name: Bug report
+description: Report a problem or regression.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A short, clear description of the bug.
+      placeholder: The map fails to load on first run.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide step-by-step instructions.
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See error ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen?
+      placeholder: The map should load with my current location.
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+      placeholder: The page shows a blank map area.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, and version.
+      placeholder: Chrome 122 on macOS 14
